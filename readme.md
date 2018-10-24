@@ -1,23 +1,12 @@
-<p align="center">
-  <br>
-  <b>创造不息，交付不止</b>
-  <br>
-  <a href="https://www.yousails.com">
-    <img src="https://yousails.com/banners/brand.png" width=350>
-  </a>
-</p>
-
-![group](https://cloud.githubusercontent.com/assets/324764/18408949/02d3cb2a-7770-11e6-96e2-54bbcfbfa1d1.png)
-
 ## Intro
 
-This is a shell script for setting up Laravel Production environment on Ubuntu 14.04 system （ [ for Ubuntu 16](https://github.com/summerblue/laravel-ubuntu-init/blob/master/deploy-16.sh) ).
+This is a shell script for setting up Laravel Production environment on Ubuntu 14.04 system （ [Spinoff from](https://github.com/summerblue/laravel-ubuntu-init) ).
 
-> [中文文档](https://phphub.org/topics/2814)
+> [Link](https://phphub.org/topics/2814)
 
 ## Software list
 
-* Ubuntu 14.04 / [Ubuntu 16 请使用这个脚本](https://github.com/summerblue/laravel-ubuntu-init/blob/master/deploy-16.sh)
+* [Ubuntu Server 16]
 * Git
 * PHP 7.1
 * Nginx
@@ -36,14 +25,14 @@ This is a shell script for setting up Laravel Production environment on Ubuntu 1
 My Ubuntu 16.04
 
 ```
-wget https://raw.githubusercontent.com/summerblue/laravel-ubuntu-init/master/deploy-16.sh -O deploy.sh
+wget https://raw.githubusercontent.com/TrustFinity/server-init/master/deploy-16.sh -O deploy.sh
 chmod +x deploy.sh
 ```
 
 Ubuntu 14.04
 
 ```
-wget https://raw.githubusercontent.com/summerblue/laravel-ubuntu-init/master/deploy.sh
+wget https://raw.githubusercontent.com/TrustFinity/server-init/master/deploy.sh
 chmod +x deploy.sh
 ```
 
@@ -75,9 +64,9 @@ It will finish installation with this message:
 --
 --
 It's Done.
-Mysql Root Password: xxx你的密码xxx
-Mysql Normal User: estuser
-Mysql Normal User Password: xxx你的密码xxx
+Mysql Root Password: xxxxxx
+Mysql Normal User: xxxxxxx
+Mysql Normal User Password: xxxxxx
 --
 --
 ```
@@ -86,11 +75,11 @@ Mysql Normal User Password: xxx你的密码xxx
 
 ### 1. Web root permission
 
-Nginx using `www` user, in order to have a correct permission, you should change the owner of the directory:
+Nginx using `deploi` user, in order to have a correct permission, you should change the owner of the directory:
 
 ```
 cd /data/www/{YOU PROJECT FOLDER NAME}
-chown www:www -R ./
+chown deploi:deploi -R ./
 ```
 
 ### 2. Add a site
