@@ -152,9 +152,9 @@ service php7.2-fpm restart
 
 # Install Node
 
-apt-get install -y nodejs
-/usr/bin/npm install -g gulp
-/usr/bin/npm install -g bower
+apt-get install -y nodejs npm
+# /usr/bin/npm install -g gulp
+# /usr/bin/npm install -g bower
 
 # Install SQLite
 
