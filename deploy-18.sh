@@ -41,7 +41,7 @@ apt-get update
 apt-get -y upgrade
 
 # remove apache2
-apt-get purge apache2 -y
+apt purge apache2 -y
 
 # Install Some PPAs
 
@@ -57,7 +57,8 @@ apt-add-repository ppa:ondrej/php -y
 # sh -c 'echo "deb http://repo.mysql.com/apt/ubuntu/ xenial mysql-5.7" >> /etc/apt/sources.list.d/mysql.list'
 
 # Install node
-curl --silent --location https://deb.nodesource.com/setup_8.x | bash -
+curl --silent --location https://deb.nodesource.com/setup_10.x | bash -
+# curl --silent --location https://deb.nodesource.com/setup_8.x | bash -
 
 # Update Package Lists
 
@@ -158,7 +159,7 @@ apt-get install -y nodejs npm
 
 # Install SQLite
 
-apt-get install -y sqlite3 libsqlite3-dev
+# apt-get install -y sqlite3 libsqlite3-dev
 
 # Install MySQL
 
@@ -182,7 +183,8 @@ mysql_tzinfo_to_sql /usr/share/zoneinfo | mysql --user=root --password=${MYSQL_R
 
 # Install A Few Other Things
 
-apt-get install -y redis-server memcached beanstalkd
+apt-get install -y redis-server
+# apt-get install -y redis-server memcached beanstalkd
 
 # Configure Supervisor
 
@@ -191,8 +193,8 @@ service supervisor start
 
 # Configure Beanstalkd
 
-sed -i "s/#START=yes/START=yes/" /etc/default/beanstalkd
-/etc/init.d/beanstalkd start
+# sed -i "s/#START=yes/START=yes/" /etc/default/beanstalkd
+# /etc/init.d/beanstalkd start
 
 # Enable Swap Memory
 
