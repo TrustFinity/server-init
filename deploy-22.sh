@@ -57,7 +57,7 @@ apt-add-repository ppa:ondrej/php -y
 # sh -c 'echo "deb http://repo.mysql.com/apt/ubuntu/ xenial mysql-5.7" >> /etc/apt/sources.list.d/mysql.list'
 
 # Install node
-curl --silent --location https://deb.nodesource.com/setup_10.x | bash -
+curl --silent --location https://deb.nodesource.com/setup_16.x | bash -
 
 # Update Package Lists
 
@@ -66,20 +66,18 @@ apt-get update
 # Install Some Basic Packages
 
 apt-get install -y build-essential dos2unix gcc git libmcrypt4 libpcre3-dev \
-make python2.7-dev python-pip re2c supervisor unattended-upgrades whois vim libnotify-bin
+make python python-pip re2c supervisor unattended-upgrades whois vim libnotify-bin
 
 # Set Kampala Timezone
 
-ln -sf /usr/share/zoneinfo/Africa/Kampala /etc/localtime
+# ln -sf /usr/share/zoneinfo/Africa/Kampala /etc/localtime
 
-# Install PHP7.2 Stuffs
+# Install PHP8.1 Stuffs
 
-apt-get install -y --force-yes php7.2-cli php7.2 \
-php7.2-pgsql php7.2-sqlite3 php7.2-gd php7.2-apcu \
-php7.2-curl php7.2-mcrypt \
-php7.2-imap php7.2-mysql php7.2-memcached php7.2-readline php7.2-xdebug \
-php7.2-mbstring php7.2-xml php7.2-zip php7.2-intl php7.2-bcmath php7.2-soap \
-php7.2-mbstring php7.2-dom php7.2-curl php7.2-mysql
+apt-get install -y --force-yes php8.1-cli php8.1 \
+php8.1-gd php8.1-curl php8.1-mcrypt \
+php8.1-mysql php8.1-xdebug php8.1-mbstring php8.1-xml php8.1-zip php8.1-bcmath \
+php8.1-dom
 
 # Install Composer
 
@@ -91,25 +89,25 @@ printf "\nPATH=\"$(composer config -g home 2>/dev/null)/vendor/bin:\$PATH\"\n" |
 
 # Set Some PHP CLI Settings
 
-sudo sed -i "s/error_reporting = .*/error_reporting = E_ALL/" /etc/php/7.2/cli/php.ini
-sudo sed -i "s/display_errors = .*/display_errors = On/" /etc/php/7.2/cli/php.ini
-sudo sed -i "s/memory_limit = .*/memory_limit = 512M/" /etc/php/7.2/cli/php.ini
-sudo sed -i "s/;date.timezone.*/date.timezone = UTC/" /etc/php/7.2/cli/php.ini
+sudo sed -i "s/error_reporting = .*/error_reporting = E_ALL/" /etc/php/8.1/cli/php.ini
+sudo sed -i "s/display_errors = .*/display_errors = On/" /etc/php/8.1/cli/php.ini
+sudo sed -i "s/memory_limit = .*/memory_limit = 512M/" /etc/php/8.1/cli/php.ini
+sudo sed -i "s/;date.timezone.*/date.timezone = UTC/" /etc/php/8.1/cli/php.ini
 
 # Install Nginx & PHP-FPM
 
-apt-get install -y --force-yes nginx php7.2-fpm
+apt-get install -y --force-yes nginx php8.1-fpm
 
 # Setup Some PHP-FPM Options
 
-sed -i "s/error_reporting = .*/error_reporting = E_ALL \& ~E_NOTICE \& ~E_STRICT \& ~E_DEPRECATED/" /etc/php/7.2/fpm/php.ini
-sed -i "s/display_errors = .*/display_errors = Off/" /etc/php/7.2/fpm/php.ini
-sed -i "s/;cgi.fix_pathinfo=1/cgi.fix_pathinfo=0/" /etc/php/7.2/fpm/php.ini
-sed -i "s/memory_limit = .*/memory_limit = 512M/" /etc/php/7.2/fpm/php.ini
-sed -i "s/upload_max_filesize = .*/upload_max_filesize = 50M/" /etc/php/7.2/fpm/php.ini
-sed -i "s/post_max_size = .*/post_max_size = 50M/" /etc/php/7.2/fpm/php.ini
-sed -i "s/;date.timezone.*/date.timezone = UTC/" /etc/php/7.2/fpm/php.ini
-sed -i "s/listen =.*/listen = 127.0.0.1:9000/" /etc/php/7.2/fpm/pool.d/www.conf
+sed -i "s/error_reporting = .*/error_reporting = E_ALL \& ~E_NOTICE \& ~E_STRICT \& ~E_DEPRECATED/" /etc/php/8.1/fpm/php.ini
+sed -i "s/display_errors = .*/display_errors = Off/" /etc/php/8.1/fpm/php.ini
+sed -i "s/;cgi.fix_pathinfo=1/cgi.fix_pathinfo=0/" /etc/php/8.1/fpm/php.ini
+sed -i "s/memory_limit = .*/memory_limit = 512M/" /etc/php/8.1/fpm/php.ini
+sed -i "s/upload_max_filesize = .*/upload_max_filesize = 50M/" /etc/php/8.1/fpm/php.ini
+sed -i "s/post_max_size = .*/post_max_size = 50M/" /etc/php/8.1/fpm/php.ini
+sed -i "s/;date.timezone.*/date.timezone = UTC/" /etc/php/8.1/fpm/php.ini
+sed -i "s/listen =.*/listen = 127.0.0.1:9000/" /etc/php/8.1/fpm/pool.d/www.conf
 
 # Setup Some fastcgi_params Options
 
@@ -140,25 +138,19 @@ EOF
 sed -i "s/user www-data;/user deploi;/" /etc/nginx/nginx.conf
 sed -i "s/# server_names_hash_bucket_size.*/server_names_hash_bucket_size 64;/" /etc/nginx/nginx.conf
 
-sed -i "s/user = www-data/user = deploi/" /etc/php/7.2/fpm/pool.d/www.conf
-sed -i "s/group = www-data/group = deploi/" /etc/php/7.2/fpm/pool.d/www.conf
+sed -i "s/user = www-data/user = deploi/" /etc/php/8.1/fpm/pool.d/www.conf
+sed -i "s/group = www-data/group = deploi/" /etc/php/8.1/fpm/pool.d/www.conf
 
-sed -i "s/listen\.owner.*/listen.owner = deploi/" /etc/php/7.2/fpm/pool.d/www.conf
-sed -i "s/listen\.group.*/listen.group = deploi/" /etc/php/7.2/fpm/pool.d/www.conf
-sed -i "s/;listen\.mode.*/listen.mode = 0666/" /etc/php/7.2/fpm/pool.d/www.conf
+sed -i "s/listen\.owner.*/listen.owner = deploi/" /etc/php/8.1/fpm/pool.d/www.conf
+sed -i "s/listen\.group.*/listen.group = deploi/" /etc/php/8.1/fpm/pool.d/www.conf
+sed -i "s/;listen\.mode.*/listen.mode = 0666/" /etc/php/8.1/fpm/pool.d/www.conf
 
 service nginx restart
-service php7.2-fpm restart
+service php8.1-fpm restart
 
 # Install Node
 
 apt-get install -y nodejs npm
-# /usr/bin/npm install -g gulp
-# /usr/bin/npm install -g bower
-
-# Install SQLite
-
-# apt-get install -y sqlite3 libsqlite3-dev
 
 # Install MySQL
 
@@ -187,19 +179,14 @@ apt-get install -y redis-server
 
 # Configure Supervisor
 
-systemctl enable supervisor.service
+service supervisor.service enable
 service supervisor start
-
-# Configure Beanstalkd
-
-# sed -i "s/#START=yes/START=yes/" /etc/default/beanstalkd
-# /etc/init.d/beanstalkd start
 
 # Enable Swap Memory
 
-/bin/dd if=/dev/zero of=/var/swap.1 bs=1M count=1024
-/sbin/mkswap /var/swap.1
-/sbin/swapon /var/swap.1
+# /bin/dd if=/dev/zero of=/var/swap.1 bs=1M count=1024
+# /sbin/mkswap /var/swap.1
+# /sbin/swapon /var/swap.1
 
 clear
 echo "--"
