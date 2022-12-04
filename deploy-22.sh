@@ -57,7 +57,7 @@ apt-add-repository ppa:ondrej/php -y
 # sh -c 'echo "deb http://repo.mysql.com/apt/ubuntu/ xenial mysql-5.7" >> /etc/apt/sources.list.d/mysql.list'
 
 # Install node
-curl --silent --location https://deb.nodesource.com/setup_16.x | bash -
+curl --silent --location https://deb.nodesource.com/setup_14.x | bash -
 
 # Update Package Lists
 
