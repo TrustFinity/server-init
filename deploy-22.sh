@@ -166,7 +166,7 @@ service supervisor start
 /sbin/mkswap /var/swap.1
 /sbin/swapon /var/swap.1
 
-clear
+# clear
 echo "--"
 echo "--"
 echo "It's Done."
