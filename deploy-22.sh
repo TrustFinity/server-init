@@ -31,7 +31,7 @@ export DEBIAN_FRONTEND=noninteractive
 
 # addgroup deployer
 echo "Adding deployer user and group"
-useradd -d /home/deployer -c "deployer data" -m -s /usr/sbin/nologin deployer
+useradd -d /home/deployer -c "deployer data" -m -s /bin/bash deployer
 usermod -aG sudo deployer
 
 # Update Package List
