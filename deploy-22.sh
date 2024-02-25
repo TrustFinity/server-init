@@ -6,30 +6,22 @@ export DEBIAN_FRONTEND=noninteractive
 [ $(id -u) != "0" ] && { echo "${CFAILURE}Error: You must be root to run this script${CEND}"; exit 1; }
 
 # Configure
-# MYSQL_ROOT_PASSWORD="deployer"
-# MYSQL_NORMAL_USER="deployer"
-# MYSQL_NORMAL_USER_PASSWORD="deployer"
+MYSQL_ROOT_PASSWORD="deployer"
+MYSQL_NORMAL_USER="deployer"
+MYSQL_NORMAL_USER_PASSWORD="deployer"
 
 # Check if password is defined
-# if [[ "$MYSQL_ROOT_PASSWORD" == "" ]]; then
-#     echo "${CFAILURE}Error: MYSQL_ROOT_PASSWORD not define!!${CEND}";
-#     exit 1;
-# fi
-# if [[ "$MYSQL_NORMAL_USER_PASSWORD" == "" ]]; then
-#     echo "${CFAILURE}Error: MYSQL_NORMAL_USER_PASSWORD not define!!${CEND}";
-#     exit 1;
-# fi
+if [[ "$MYSQL_ROOT_PASSWORD" == "" ]]; then
+    echo "${CFAILURE}Error: MYSQL_ROOT_PASSWORD not define!!${CEND}";
+    exit 1;
+fi
+if [[ "$MYSQL_NORMAL_USER_PASSWORD" == "" ]]; then
+    echo "${CFAILURE}Error: MYSQL_NORMAL_USER_PASSWORD not define!!${CEND}";
+    exit 1;
+fi
 
-# Force Locale
 
-# export LC_ALL="en_US.UTF-8"
-# echo "LC_ALL=en_US.UTF-8" >> /etc/default/locale
-# locale-gen en_US.UTF-8
-
-# Add deployer user and group, commented out 
-# becuase this user is already created in my case
-
-# addgroup deployer
+# Add user and group deployer
 echo "Adding deployer user and group"
 useradd -d /home/deployer -c "deployer data" -m -s /bin/bash deployer
 usermod -aG sudo deployer
@@ -46,17 +38,17 @@ apt purge apache2 -y
 # Install Some PPAs
 apt-get install -y software-properties-common curl
 
-# apt-add-repository ppa:nginx/development -y
-# apt-add-repository ppa:chris-lea/redis-server -y
+apt-add-repository ppa:nginx/development -y
+apt-add-repository ppa:chris-lea/redis-server -y
 apt-add-repository ppa:ondrej/php -y
 
 # Using the default Ubuntu 16 MySQL 7 Build
-# gpg: key 5072E1F5: public key "MySQL Release Engineering <mysql-build@oss.oracle.com>" imported
-# apt-key adv --keyserver ha.pool.sks-keyservers.net --recv-keys 5072E1F5
-# sh -c 'echo "deb http://repo.mysql.com/apt/ubuntu/ xenial mysql-5.7" >> /etc/apt/sources.list.d/mysql.list'
+gpg: key 5072E1F5: public key "MySQL Release Engineering <mysql-build@oss.oracle.com>" imported
+apt-key adv --keyserver ha.pool.sks-keyservers.net --recv-keys 5072E1F5
+sh -c 'echo "deb http://repo.mysql.com/apt/ubuntu/ xenial mysql-5.7" >> /etc/apt/sources.list.d/mysql.list'
 
 # Install node
-# curl --silent --location https://deb.nodesource.com/setup_14.x | bash -
+curl --silent --location https://deb.nodesource.com/setup_18.x | bash -
 
 # Update Package Lists
 apt-get update
@@ -64,9 +56,6 @@ apt-get update
 # Install Some Basic Packages
 apt-get install -y build-essential dos2unix gcc git libmcrypt4 libpcre3-dev \
 make python python-pip re2c supervisor unattended-upgrades whois vim libnotify-bin
-
-# Set Kampala Timezone
-# ln -sf /usr/share/zoneinfo/Africa/Kampala /etc/localtime
 
 # Install PHP8.1 Stuffs
 apt-get install -y --force-yes php8.1-cli php8.1 \
@@ -136,27 +125,26 @@ service nginx restart
 service php8.1-fpm restart
 
 # Install Node
-# apt-get install -y nodejs npm
+apt-get install -y nodejs npm
 
 # Install MySQL
-# debconf-set-selections <<< "mysql-community-server mysql-community-server/root-pass password ${MYSQL_ROOT_PASSWORD}"
-# debconf-set-selections <<< "mysql-community-server mysql-community-server/re-root-pass password ${MYSQL_ROOT_PASSWORD}"
-# apt-get install -y mysql-server
+debconf-set-selections <<< "mysql-community-server mysql-community-server/root-pass password ${MYSQL_ROOT_PASSWORD}"
+debconf-set-selections <<< "mysql-community-server mysql-community-server/re-root-pass password ${MYSQL_ROOT_PASSWORD}"
+apt-get install -y mysql-server
 
 # Configure MySQL Password Lifetime
-# echo "default_password_lifetime = 0" >> /etc/mysql/mysql.conf.d/mysqld.cnf
-# mysql --user="root" --password="${MYSQL_ROOT_PASSWORD}" -e "CREATE USER '${MYSQL_NORMAL_USER}'@'0.0.0.0' IDENTIFIED BY '${MYSQL_NORMAL_USER_PASSWORD}';"
-# mysql --user="root" --password="${MYSQL_ROOT_PASSWORD}" -e "GRANT ALL ON *.* TO '${MYSQL_NORMAL_USER}'@'127.0.0.1' IDENTIFIED BY '${MYSQL_NORMAL_USER_PASSWORD}' WITH GRANT OPTION;"
-# mysql --user="root" --password="${MYSQL_ROOT_PASSWORD}" -e "GRANT ALL ON *.* TO '${MYSQL_NORMAL_USER}'@'localhost' IDENTIFIED BY '${MYSQL_NORMAL_USER_PASSWORD}' WITH GRANT OPTION;"
-# mysql --user="root" --password="${MYSQL_ROOT_PASSWORD}" -e "FLUSH PRIVILEGES;"
-# service mysql restart
+echo "default_password_lifetime = 0" >> /etc/mysql/mysql.conf.d/mysqld.cnf
+mysql --user="root" --password="${MYSQL_ROOT_PASSWORD}" -e "CREATE USER '${MYSQL_NORMAL_USER}'@'0.0.0.0' IDENTIFIED BY '${MYSQL_NORMAL_USER_PASSWORD}';"
+mysql --user="root" --password="${MYSQL_ROOT_PASSWORD}" -e "GRANT ALL ON *.* TO '${MYSQL_NORMAL_USER}'@'127.0.0.1' IDENTIFIED BY '${MYSQL_NORMAL_USER_PASSWORD}' WITH GRANT OPTION;"
+mysql --user="root" --password="${MYSQL_ROOT_PASSWORD}" -e "GRANT ALL ON *.* TO '${MYSQL_NORMAL_USER}'@'localhost' IDENTIFIED BY '${MYSQL_NORMAL_USER_PASSWORD}' WITH GRANT OPTION;"
+mysql --user="root" --password="${MYSQL_ROOT_PASSWORD}" -e "FLUSH PRIVILEGES;"
+service mysql restart
 
 # Add Timezone Support To MySQL
-# mysql_tzinfo_to_sql /usr/share/zoneinfo | mysql --user=root --password=${MYSQL_ROOT_PASSWORD} mysql
+mysql_tzinfo_to_sql /usr/share/zoneinfo | mysql --user=root --password=${MYSQL_ROOT_PASSWORD} mysql
 
 # Install A Few Other Things
-# apt-get install -y redis-server
-# apt-get install -y redis-server memcached beanstalkd
+apt-get install -y redis-server
 
 # Configure Supervisor
 service supervisor.service enable
@@ -172,8 +160,8 @@ chmod 0600 /var/swap.1
 echo "--"
 echo "--"
 echo "It's Done."
-# echo "Mysql Root Password: ${MYSQL_ROOT_PASSWORD}"
-# echo "Mysql Normal User: ${MYSQL_NORMAL_USER}"
-# echo "Mysql Normal User Password: ${MYSQL_NORMAL_USER_PASSWORD}"
+echo "Mysql Root Password: ${MYSQL_ROOT_PASSWORD}"
+echo "Mysql Normal User: ${MYSQL_NORMAL_USER}"
+echo "Mysql Normal User Password: ${MYSQL_NORMAL_USER_PASSWORD}"
 echo "--"
 echo "--"
